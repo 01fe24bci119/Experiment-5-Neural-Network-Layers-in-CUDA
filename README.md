@@ -30,41 +30,125 @@ Implement and test neural-network operations using custom CUDA kernels, then com
 ## Setup and run the experiment
 
 ### 1. Verify the NVIDIA GPU
-Open PowerShell or Command Prompt and run:
+
+Displays GPU details, driver version, CUDA version, memory usage, and running processes.
 
 ```powershell
 nvidia-smi
 ```
 
+**Screenshot:**
+
+![GPU details – nvidia-smi output showing RTX 4500 Ada Generation](ss/01_gpu_details.png)
+
+---
+
 ### 2. Verify CUDA compiler
+
+Prints the installed NVCC (CUDA compiler) version to confirm CUDA Toolkit is correctly installed.
+
 ```powershell
 nvcc --version
+```
+
+**Screenshot:**
+
+![CUDA compiler version](ss/03_nvcc_version.png)
+
+---
+
+Locates the full path of the `nvcc` executable to confirm it is on the system PATH.
+
+```powershell
 where.exe nvcc
 ```
 
+**Screenshot:**
+
+![NVCC path](ss/04_nvcc_path.png)
+
+---
+
 ### 3. Open the Visual Studio x64 developer environment
-For the Build Tools installation used in this experiment:
+
+Launches the Visual Studio 2026 Build Tools developer command prompt configured for 64-bit compilation, required for CUDA to find the MSVC C++ compiler.
 
 ```cmd
-cmd.exe /k ""C:\Program Files (x86)\Microsoft Visual Studio\18\BuildTools\Common7\Tools\VsDevCmd.bat" -arch=amd64 -host_arch=amd64"
+Test-Path "C:\Program Files (x86)\Microsoft Visual Studio\18\BuildTools\Common7\Tools\VsDevCmd.bat"
+cmd.exe /k "C:\Program Files (x86)\Microsoft Visual Studio\18\BuildTools\Common7\Tools\VsDevCmd.bat" -arch=amd64 -host_arch=amd64
 ```
 
-### 4. Change to the experiment directory
+**Screenshot:**
+
+![Visual Studio developer environment activated](ss/05_vs_environment.png)
+
+---
+
+### 4. Change to the experiment directory and create a basic CUDA test
+
+Navigates to the experiment folder, opens a basic CUDA test file for editing, compiles it, and runs it to confirm the CUDA toolchain works end-to-end.
+
 ```cmd
 cd /d "%USERPROFILE%\Documents\Experiment5_CUDA"
+notepad cuda_test.cu
+nvcc -O2 cuda_test.cu -o cuda_test.exe
+cuda_test.exe
 ```
 
-### 5. Compile the CUDA source
+**Screenshot:**
+
+![Basic CUDA test – compile and run](ss/06_cuda_basic_test.png)
+
+---
+
+### 5. Compile and run the CUDA memory and kernel test
+
+Compiles `cuda_test.cu` targeting the `sm_89` architecture (Ada Lovelace), then runs the resulting executable to verify GPU memory allocation and kernel execution.
+
+```cmd
+nvcc -O2 -arch=sm_89 cuda_test.cu -o cuda_test.exe
+cuda_test.exe
+```
+
+**Screenshot:**
+
+![CUDA memory and kernel test – GPU memory allocated, kernel launched, results verified](ss/07_cuda_memory_kernel_test.png)
+
+---
+
+### 6. Compile the neural network CUDA source
+
+Compiles the main `neural_network.cu` file with optimisation level O2 and targets the `sm_89` GPU architecture, producing `neural_network.exe`.
+
 ```cmd
 nvcc -O2 -arch=sm_89 neural_network.cu -o neural_network.exe
 ```
 
-### 6. Execute the experiment
+---
+
+### 7. Execute the neural network experiment
+
+Runs the compiled neural network, performing CUDA kernel tests (matrix multiply + bias, ReLU, Sigmoid) and benchmarking CPU vs GPU forward-pass performance.
+
 ```cmd
 neural_network.exe
 ```
 
 Run the executable again to collect additional measurements. Each program execution itself averages its CPU and GPU timings over 20 repetitions.
+
+**Screenshot – Run 1:**
+
+![Neural network run 1](ss/08_neural_network_run1.png)
+
+**Screenshot – Run 2:**
+
+![Neural network run 2](ss/09_neural_network_run2.png)
+
+**Screenshot – Run 3:**
+
+![Neural network run 3](ss/10_neural_network_run3.png)
+
+---
 
 ## Implemented operations
 1. Matrix multiplication with bias: `C = A × B + bias`.
@@ -101,24 +185,6 @@ The four runs show variation in timing, while all correctness checks remained su
 
 The complete measurement table is also available in [`results/performance_results.md`](results/performance_results.md) and as [`results/performance_results.csv`](results/performance_results.csv).
 
-## Screenshots
-
-### GPU and CUDA setup
-![GPU details](ss/01_gpu_details.png)
-![CUDA compiler version](ss/02_cuda_compiler_version.png)
-![NVCC path](ss/03_nvcc_path.png)
-![Visual Studio developer environment](ss/04_visual_studio_environment.png)
-![Basic CUDA test](ss/05_cuda_basic_test.png)
-![CUDA memory and kernel test](ss/06_cuda_memory_kernel_test.png)
-
-### Neural network execution
-![Neural network run 1](ss/07_neural_network_run1.png)
-![Neural network run 2](ss/08_neural_network_run2.png)
-![Neural network run 3 output rendered from the console text supplied](ss/09_neural_network_run3_output_rendered.png)
-![Neural network run 4 output rendered from the console text supplied](ss/10_neural_network_run4_output_rendered.png)
-
-> Note: Runs 3 and 4 above are terminal-style images recreated from the console output pasted into the chat, not direct screen captures. Replace them with original terminal screenshots if your submission specifically requires unedited screenshots.
-
 ## Conclusion
 The neural-network operations were implemented and tested successfully using CUDA. The CPU and GPU forward-pass outputs matched within the program's tolerance. The measurements demonstrate the GPU's speed advantage for the tested workload, while also showing that host/device transfer overhead affects end-to-end performance.
 
@@ -142,15 +208,15 @@ Experiment-5-Neural-Network-Layers-in-CUDA/
 │
 └── ss/
     ├── 01_gpu_details.png
-    ├── 02_cuda_compiler_version.png
-    ├── 03_nvcc_path.png
-    ├── 04_visual_studio_environment.png
-    ├── 05_cuda_basic_test.png
-    ├── 06_cuda_memory_kernel_test.png
-    ├── 07_neural_network_run1.png
-    ├── 08_neural_network_run2.png
-    ├── 09_neural_network_run3_output_rendered.png
-    ├── 10_neural_network_run4_output_rendered.png
+    ├── 02_nvidia_smi_full.png
+    ├── 03_nvcc_version.png
+    ├── 04_nvcc_path.png
+    ├── 05_vs_environment.png
+    ├── 06_cuda_basic_test.png
+    ├── 07_cuda_memory_kernel_test.png
+    ├── 08_neural_network_run1.png
+    ├── 09_neural_network_run2.png
+    ├── 10_neural_network_run3.png
     ├── 11_execution_time_graph.png
     └── 12_speedup_graph.png
 ```
