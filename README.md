@@ -124,3 +124,33 @@ The neural-network operations were implemented and tested successfully using CUD
 
 ## Reproduce
 From the Visual Studio x64 developer command prompt, navigate to the source directory, compile using the command above, and run `neural_network.exe`.
+
+## Project Structure
+
+```text
+Experiment-5-Neural-Network-Layers-in-CUDA/
+│
+├── neural_network.cu
+├── README.md
+├── .gitignore
+│
+├── results/
+│   ├── 11_execution_time_graph.png
+│   ├── 12_speedup_graph.png
+│   ├── performance_results.csv
+│   └── performance_results.md
+│
+└── ss/
+    ├── 01_gpu_details.png
+    ├── 02_cuda_compiler_version.png
+    ├── 03_nvcc_path.png
+    ├── 04_visual_studio_environment.png
+    ├── 05_cuda_basic_test.png
+    ├── 06_cuda_memory_kernel_test.png
+    ├── 07_neural_network_run1.png
+    ├── 08_neural_network_run2.png
+    ├── 09_neural_network_run3_output_rendered.png
+    ├── 10_neural_network_run4_output_rendered.png
+    ├── 11_execution_time_graph.png
+    └── 12_speedup_graph.png
+```
